@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "287148389757",
+    "project_id": "tunedheart-546ef",
+    "storage_bucket": "tunedheart-546ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287148389757:android:a4c350c5f69fa7f9270814",
+        "android_client_info": {
+          "package_name": "com.example.tunedheart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlaeInvEof0i-nj6gY_iI0OYM-gM0A1Jc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
