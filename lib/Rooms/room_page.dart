@@ -36,10 +36,10 @@ class _RoomPageState extends State<RoomPage> {
           'members': [
             "$userName (Host)",
           ], // Replace with the actual list of member user IDs
-          'currentSong': 'SongID1', // Replace with the actual current song ID
+          'currentSong': 'Songs/Dandelions.mp3', // Replace with the actual current song ID
           'playbackState':
               true, // Replace with the actual playback state (true for playing, false for paused)
-          'currentPosition': 320, // Replace with the actual current position
+          'currentPosition': 0, // Replace with the actual current position
           // Add other room details as needed
         });
 
