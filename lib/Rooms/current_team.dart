@@ -14,11 +14,6 @@ class _CurrentTeamPageState extends State<CurrentTeamPage> {
   // Replace this with the actual room code
   late List<dynamic> teamMembers;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   // Replace this with actual team members
   @override
   Widget build(BuildContext context) {
