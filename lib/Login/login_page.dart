@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tunedheart/Login/bottom_rectangles.dart';
 import 'package:tunedheart/Rooms/room_page.dart';
 import 'package:tunedheart/Widget/google_sign_in_widget.dart';
@@ -127,14 +128,16 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 150,
             ),
-            Container(
-              width: 140,
-              height: 140,
-              decoration: const ShapeDecoration(
-                color: Color(0xFF23B929),
-                shape: OvalBorder(),
-              ),
+            Lottie.asset(
+              'assets/breath_animation.json',
+              width: 200,
+              height: 200,
+              fit: BoxFit.contain,
+              repeat: true, // Set repeat to true for infinite looping
             ),
+            const SizedBox(
+              height: 10,
+            )
           ],
         ),
       );
