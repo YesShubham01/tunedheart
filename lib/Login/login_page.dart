@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:tunedheart/Login/bottom_rectangles.dart';
+import 'package:tunedheart/Rooms/room_page.dart';
 import 'package:tunedheart/Widget/google_sign_in_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   late StreamController<int> _stateController;
   late int state;
   bool process = false;
+  bool buttonvisible = true;
 
   @override
   void initState() {
@@ -35,28 +37,8 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: const Color(0xFF141414),
       body: Stack(
         children: [
-          Center(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 150,
-                ),
-                Container(
-                  width: 140,
-                  height: 140,
-                  decoration: const ShapeDecoration(
-                    color: Color(0xFF23B929),
-                    shape: OvalBorder(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Center(
-              child: GoogleSignInButton(
-            ontap_start: processAnimation,
-            ontap_stop: stopAnimation,
-          )),
+          getIcon(),
+          getLoginButton(),
           Column(
             children: [
               const Spacer(),
@@ -115,6 +97,65 @@ class _LoginPageState extends State<LoginPage> {
       state = 7;
       print("yes yes yes");
     });
+    buttonvisible = false;
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    setState(() {
+      state = 8;
+    });
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    setState(() {
+      state = 9;
+    });
+
+    await Future.delayed(const Duration(seconds: 2));
+    //navigator here.
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const RoomPage()));
+
     print(state);
+  }
+
+  getIcon() {
+    if (buttonvisible) {
+      return Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 150,
+            ),
+            Container(
+              width: 140,
+              height: 140,
+              decoration: const ShapeDecoration(
+                color: Color(0xFF23B929),
+                shape: OvalBorder(),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  getLoginButton() {
+    if (buttonvisible) {
+      return Center(
+          child: GoogleSignInButton(
+        ontap_start: processAnimation,
+        ontap_stop: stopAnimation,
+      ));
+    } else {
+      return const Center(
+        child: Text("Welcome",
+            style: TextStyle(
+                color: Colors.white, fontSize: 48, fontFamily: "delius")),
+      );
+    }
   }
 }

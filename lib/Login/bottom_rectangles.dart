@@ -72,6 +72,7 @@ class _BottomRectanglesState extends State<BottomRectangles> {
   double _getHeightForStates(int state, int index) {
     switch (state) {
       case 0:
+        width = 30;
         return 40.00;
       case 1:
         List<double> heights = [130, 150, 170, 190, 210, 230, 250];
@@ -92,8 +93,33 @@ class _BottomRectanglesState extends State<BottomRectangles> {
       case 7:
         width = 52;
         return screenHeight - 20;
+      case 8:
+        List<double> heights = [
+          screenHeight - 20,
+          screenHeight - 20,
+          screenHeight - 20,
+          0,
+          screenHeight - 20,
+          screenHeight - 20,
+          screenHeight - 20
+        ];
+        return heights[index];
+
+      case 9:
+        width = 0;
+        List<double> heights = [
+          screenHeight - 20,
+          screenHeight - 20,
+          screenHeight - 20,
+          0,
+          screenHeight - 20,
+          screenHeight - 20,
+          screenHeight - 20
+        ];
+        return heights[index];
+
       default:
-        return screenHeight - 20;
+        return 0;
     }
   }
 }
