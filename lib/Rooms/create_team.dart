@@ -88,8 +88,9 @@ class _CreateTeamPageState extends State<CreateTeamPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const BackendTestingPage()),
+                                builder: (context) => BackendTestingPage(
+                                      roomCode: widget.roomCode,
+                                    )),
                           );
                         },
                         color: Colors.red,

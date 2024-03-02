@@ -51,7 +51,9 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const BackendTestingPage(),
+          builder: (context) => BackendTestingPage(
+            roomCode: roomCode,
+          ),
         ),
       );
     } else {
