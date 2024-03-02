@@ -39,6 +39,8 @@ dependencies:
   google_sign_in: ^6.2.1
   firebase_auth: ^4.17.6
   cloud_firestore: ^4.15.6
+  just_audio: ^0.9.36
+  firebase_storage: ^11.6.7
 
 dev_dependencies:
   flutter_test:
