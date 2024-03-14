@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tunedheart/Pages/Profile/profile_page.dart';
 import 'package:tunedheart/Services/FireAuth%20Service/authentication.dart';
 import 'package:tunedheart/Widget/sqaure_button.dart';
 import '../Widget/custom_button.dart';
@@ -62,51 +63,77 @@ class _RoomPageState extends State<RoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Room Page'),
-        titleTextStyle: const TextStyle(
-          fontSize: 25,
-          fontStyle: FontStyle.italic,
-          fontWeight: FontWeight.bold,
-        ),
-        backgroundColor: Colors.red,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 240,
-          ),
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SqaureButton(
-                    text: "Create Team",
-                    onPressed: () {
-                      createRoom();
-                    },
-                    icon: const Image(
-                        image: AssetImage("images/create_heart_icon.png")),
-                    color: Colors.red),
-                const SizedBox(width: 20),
-                SqaureButton(
-                    text: "Join Team",
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const JoinTeamPage()),
-                      );
-                    },
-                    icon: const Image(
-                        image: AssetImage("images/join_heart_icon.png")),
-                    color: Colors.blue),
-              ],
+    String name = Authenticate.getUserName();
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 25, top: 20),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfilePage()),
+                  );
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      foregroundImage:
+                          NetworkImage(Authenticate.getProfileUrl()),
+                      // backgroundImage: NetworkImage(Authenticate.getProfileUrl()),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Text(
+                      "Profile",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 200,
+            ),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SqaureButton(
+                      text: "Create Team",
+                      onPressed: () {
+                        createRoom();
+                      },
+                      icon: const Image(
+                          image: AssetImage("images/create_heart_icon.png")),
+                      color: Colors.red),
+                  const SizedBox(width: 20),
+                  SqaureButton(
+                      text: "Join Team",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const JoinTeamPage()),
+                        );
+                      },
+                      icon: const Image(
+                          image: AssetImage("images/join_heart_icon.png")),
+                      color: Colors.blue),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
