@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tunedheart/Services/FireAuth%20Service/authentication.dart';
+import 'package:tunedheart/Widget/sqaure_button.dart';
 import '../Widget/custom_button.dart';
 import 'create_team.dart';
 import 'join_team.dart';
@@ -36,7 +37,8 @@ class _RoomPageState extends State<RoomPage> {
           'members': [
             "$userName (Host)",
           ], // Replace with the actual list of member user IDs
-          'currentSong': 'Songs/Dandelions.mp3', // Replace with the actual current song ID
+          'currentSong':
+              'Songs/Dandelions.mp3', // Replace with the actual current song ID
           'playbackState':
               true, // Replace with the actual playback state (true for playing, false for paused)
           'currentPosition': 0, // Replace with the actual current position
@@ -71,30 +73,40 @@ class _RoomPageState extends State<RoomPage> {
         ),
         backgroundColor: Colors.red,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomButton(
-              text: 'Create Team',
-              onPressed: () {
-                createRoom();
-              },
-              color: Colors.red,
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 240,
+          ),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SqaureButton(
+                    text: "Create Team",
+                    onPressed: () {
+                      createRoom();
+                    },
+                    icon: const Image(
+                        image: AssetImage("images/create_heart_icon.png")),
+                    color: Colors.red),
+                const SizedBox(width: 20),
+                SqaureButton(
+                    text: "Join Team",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const JoinTeamPage()),
+                      );
+                    },
+                    icon: const Image(
+                        image: AssetImage("images/join_heart_icon.png")),
+                    color: Colors.blue),
+              ],
             ),
-            const SizedBox(height: 20),
-            CustomButton(
-              text: 'Join Team',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const JoinTeamPage()),
-                );
-              },
-              color: Colors.blue,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
