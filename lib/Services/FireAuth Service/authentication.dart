@@ -28,6 +28,13 @@ class Authenticate {
     return auth.currentUser?.displayName ?? "Error";
   }
 
+  //fetch profile
+  static String getProfileUrl() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    return auth.currentUser?.photoURL ?? "Error";
+  }
+
   // sign out
   static sign_out() async {
     await FirebaseAuth.instance.signOut();

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tunedheart/Login/bottom_rectangles.dart';
 import 'package:tunedheart/Rooms/room_page.dart';
+import 'package:tunedheart/Services/FireStore%20Service/firestore.dart';
 import 'package:tunedheart/Widget/google_sign_in_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -91,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       state = 6;
     });
+    FireStore.initialiseUserCollection();
 
     await Future.delayed(const Duration(seconds: 1));
 
