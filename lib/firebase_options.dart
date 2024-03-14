@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
+/// 
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -46,6 +47,7 @@ class DefaultFirebaseOptions {
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
         );
+
     }
   }
 
@@ -65,4 +67,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'tunedheart-546ef.appspot.com',
     iosBundleId: 'com.example.tunedheart',
   );
+  
 }

@@ -16,6 +16,7 @@ class BackendTestingPage extends StatefulWidget {
 class _BackendTestingPageState extends State<BackendTestingPage> {
   final AudioPlayer audioPlayer = AudioPlayer();
   late String roomId = widget.roomCode;
+  bool isSeeking=false;
 
   @override
   void initState() {
@@ -213,8 +214,13 @@ class _BackendTestingPageState extends State<BackendTestingPage> {
                                 onChanged: (double value) {
                                   Duration newPosition =
                                       Duration(milliseconds: value.toInt());
-                                  seekAudio(roomId, newPosition);
+                                  // seekAudio(roomId, newPosition);
+                                  audioPlayer.seek(newPosition);
+                                  isSeeking=true;
                                 },
+                                onChangeEnd: (double value) async {
+                                Duration newPosition=Duration(milliseconds: value.toInt());
+                                  seekAudio(roomId, newPosition);},
                                 min: 0.0,
                                 max: audioPlayer.duration?.inMilliseconds
                                         .toDouble() ??
