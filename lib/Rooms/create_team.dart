@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tunedheart/Pages/backendTest.dart';
+import 'package:tunedheart/Pages/MusicPlayer/music_player.dart';
 import 'package:tunedheart/Services/FireStore%20Service/firestore.dart';
 import '../Widget/custom_border.dart';
 import '../Widget/custom_button.dart';
@@ -88,7 +88,7 @@ class _CreateTeamPageState extends State<CreateTeamPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BackendTestingPage(
+                                builder: (context) => MusicPlayer(
                                       roomCode: widget.roomCode,
                                     )),
                           );
