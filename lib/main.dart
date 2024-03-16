@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tunedheart/Login/login_page.dart';
+import 'package:tunedheart/Providers/music_provider.dart';
 import 'package:tunedheart/SplashPage/splashpage.dart';
 import 'package:tunedheart/firebase_options.dart';
+import 'package:provider/provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,13 +21,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TunedHeartz',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: ((context) => MusicProvider())),
+      ],
+      child: MaterialApp(
+        title: 'TunedHeartz',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const SplashPage(),
       ),
-      home: const SplashPage(),
     );
   }
 }

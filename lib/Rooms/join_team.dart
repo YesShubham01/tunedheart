@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tunedheart/Pages/backendTest.dart';
+import 'package:tunedheart/Pages/MusicPlayer/music_player.dart';
 import '../Widget/custom_button.dart';
 import 'current_team.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,7 +51,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => BackendTestingPage(
+          builder: (context) => MusicPlayer(
             roomCode: roomCode,
           ),
         ),
