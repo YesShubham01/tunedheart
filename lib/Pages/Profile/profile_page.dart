@@ -57,7 +57,8 @@ String filename=parts.last;
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SingleChildScrollView( // Use SingleChildScrollView for scrollable content
+      body: Stack(
+    children: [SingleChildScrollView( // Use SingleChildScrollView for scrollable content
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20,40,15,15),
           child: Column(
@@ -159,21 +160,21 @@ String filename=parts.last;
   },
 ),
 
-              // Add Icon and _pickAudio call
-              const SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    onPressed: _pickAudio,
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              ),
+              // Add Icon and _pickAudio cal
             ],
           ),
         ),
       ),
+      Positioned(
+        bottom: 20.0, // Adjust the positioning as needed
+        right: 30.0,
+        child: FloatingActionButton(
+          onPressed: _pickAudio,
+          child: const Icon(Icons.add),
+        ),
+      ),
+    ],
+  ),
     );
   }
 }
