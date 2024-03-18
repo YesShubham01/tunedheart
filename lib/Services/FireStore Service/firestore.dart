@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tunedheart/Services/FireAuth%20Service/authentication.dart';
 import 'package:path/path.dart' as path;
@@ -119,4 +120,45 @@ class FireStore {
       print('Error saving upload link to user uploads: $e');
     }
   }
+
+
+// for displaying uploads on profile page
+static Stream<List<dynamic>> userUploadsStream() async* {
+  try {
+    // Get the current user's ID
+    String userId = Authenticate.getUserUid();
+
+    // Create a reference to the user's document in the "users" collection
+    DocumentReference userRef =
+        FirebaseFirestore.instance.collection("Users").doc(userId);
+
+    // Create a snapshot stream of the user's document
+    Stream<DocumentSnapshot> snapshotStream = userRef.snapshots();
+
+    // Yield the mapped stream
+    yield* snapshotStream.map((doc) {
+      if (doc.exists) {
+        final userData = doc.data() as Map<String, dynamic>;
+        if (userData.containsKey('uploads')) {
+          // Accessing 'uploads' array from user data
+          final uploads = userData['uploads'] as List<dynamic>;
+          // Convert 'uploads' to List<List<String>>
+          return uploads;
+        } else {
+          // 'uploads' field doesn't exist or is null
+          return [];
+        }
+      } else {
+        // Document does not exist
+        throw Exception("User document does not exist");
+      }
+    });
+  } catch (e) {
+    // Handle errors
+    print("Error fetching user uploads: $e");
+    throw Exception("Failed to fetch user uploads");
+  }
+}
+
+
 }

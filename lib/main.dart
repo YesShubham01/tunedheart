@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tunedheart/Login/login_page.dart';
+import 'package:tunedheart/Pages/Profile/profile_page.dart';
+
 import 'package:tunedheart/Providers/music_provider.dart';
 import 'package:tunedheart/SplashPage/splashpage.dart';
 import 'package:tunedheart/firebase_options.dart';
 import 'package:provider/provider.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
