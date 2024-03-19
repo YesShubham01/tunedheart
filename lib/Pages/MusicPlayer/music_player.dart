@@ -10,7 +10,8 @@ import 'package:tunedheart/Providers/music_provider.dart';
 
 class MusicPlayer extends StatefulWidget {
   final String roomCode;
-  const MusicPlayer({Key? key, required this.roomCode}) : super(key: key);
+  final String filename;
+  const MusicPlayer({Key? key, required this.roomCode,required this.filename}) : super(key: key);
 
   @override
   _MusicPlayerState createState() => _MusicPlayerState();
@@ -20,12 +21,18 @@ class _MusicPlayerState extends State<MusicPlayer> {
   final AudioPlayer audioPlayer = AudioPlayer();
   late String roomId = widget.roomCode;
   bool isSeeking = false;
+    late String filename;
+      late String hostUser;
 
   @override
   void initState() {
     super.initState();
     initializeAudioPlayer();
+    filename = widget.filename;
+     fetchHostUser(); 
   }
+
+
 
   bool isPlaying = false;
   bool isLiked = false;
@@ -61,6 +68,24 @@ class _MusicPlayerState extends State<MusicPlayer> {
         ),
       ),
     );
+  }
+
+
+    Future<void> fetchHostUser() async {
+    try {
+      DocumentSnapshot roomSnapshot = await FirebaseFirestore.instance
+          .collection('rooms')
+          .doc(widget.roomCode)
+          .get();
+
+      if (roomSnapshot.exists) {
+        setState(() {
+          hostUser = roomSnapshot['hostUser'];
+        });
+      }
+    } catch (e) {
+      print("Error fetching hostUser: $e");
+    }
   }
 
   Future<void> initializeAudioPlayer() async {
@@ -315,17 +340,18 @@ class _MusicPlayerState extends State<MusicPlayer> {
   }
 
   _getTitle() {
-    return const Column(
+    return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "My English Mash-up",
-          style: TextStyle(
+        filename,
+          style: const TextStyle(
               color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         ),
+        
         Text(
-          "Username",
-          style: TextStyle(color: Colors.white),
+          "Host: $hostUser",
+          style: const TextStyle(color: Colors.white),
         ),
       ],
     );

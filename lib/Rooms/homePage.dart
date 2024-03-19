@@ -1,139 +1,235 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:just_audio/just_audio.dart';
+import 'package:tunedheart/Objects/audio_detail.dart';
+import 'package:tunedheart/Pages/MusicPlayer/music_player.dart';
+import 'package:tunedheart/Pages/MusicPlayer/playback_state.dart';
+import 'package:tunedheart/Services/FireStore%20Service/firestore.dart';
 import 'current_team.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String roomCode;
+  const HomePage({Key? key,required this.roomCode}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, dynamic>> songs = [
-    {
-      'title': 'Love Me Like You Do',
-      'singer': 'Ellie Goulding',
-      'imageUrl':
-          'https://images.app.goo.gl/5nmg3ostzhuvXN6X9', // Replace with actual image URL
-    },
 
-    {
-      'title': 'Ghost',
-      'singer': 'Ellie Goulding',
-      'imageUrl':
-          'https://images.app.goo.gl/5nmg3ostzhuvXN6X9', // Replace with actual image URL
-    },
-
-    {
-      'title': 'Prefect',
-      'singer': 'Ellie Goulding',
-      'imageUrl':
-          'https://images.app.goo.gl/5nmg3ostzhuvXN6X9', // Replace with actual image URL
-    },
-
-    {
-      'title': 'Duniya',
-      'singer': 'Ellie Goulding',
-      'imageUrl':
-          'https://images.app.goo.gl/5nmg3ostzhuvXN6X9', // Replace with actual image URL
-    },
-
-    {
-      'title': 'Hamsafar',
-      'singer': 'Ellie Goulding',
-      'imageUrl':
-          'https://images.app.goo.gl/5nmg3ostzhuvXN6X9', // Replace with actual image URL
-    },
-
-    {
-      'title': 'Afreen',
-      'singer': 'Ellie Goulding',
-      'imageUrl':
-          'https://images.app.goo.gl/5nmg3ostzhuvXN6X9', // Replace with actual image URL
-    },
-    // Add more songs here...
-  ];
-
+ 
+// String roomId=widget.roomCode;
   int _currentIndex = 0;
   late List<bool> _isPlayingList;
+  String? currentSongUrl;
+  bool isPlaying=false;
+ 
+
+
+  String extractFilenameFromUrl(String url) {
+  String path = Uri.parse(url).pathSegments.last;
+  // Remove the file extension
+List<String> parts=path.split('/');
+String filename=parts.last;
+  // Remove file extension
+  filename = filename.replaceAll('.mp3', '');
+  // Replace %20 with spaces
+  filename = filename.replaceAll('%20', ' ');
+  return filename;
+}
+
+
+
+  void updateCurrentSong(String url) {
+    setState(() {
+      currentSongUrl = url;
+    });
+  }
+
+  // void togglePlayback() {
+  //     setState(() {
+  //               isPlaying = !isPlaying;
+  //             });
+  //             if (isPlaying) {
+  //               .playAudioFromFirestore(widget.roomCode);
+  //             } else {
+  //               pauseAudio(roomId);
+  //             }
+  //   // Implement logic to play/pause music based on isPlaying
+  // }
+
 
   @override
   void initState() {
     super.initState();
-    _initializeIsPlayingList(); // Initialize _isPlayingList in initState
+    // _initializeIsPlayingList(); // Initialize _isPlayingList in initState
+  }
+final AudioPlayer audioPlayer = AudioPlayer();
+    Future<void> playAudioFromFirestore(String roomId) async {
+    AudioDetails audioDetails = await fetchAudioDetailsFromFirestore(roomId);
+    final audioUrl = audioDetails.audioUrl;
+    final currentPosition = audioDetails.currentPosition;
+    final playbackState = audioDetails.playbackState;
+
+    try {
+      await audioPlayer.setUrl(audioUrl);
+      await audioPlayer.seek(Duration(milliseconds: currentPosition));
+      await audioPlayer.play();
+      updatePlaybackState(roomId);
+    } catch (e) {
+      print("Error playing audio: $e");
+    }
   }
 
-  void _initializeIsPlayingList() {
-    _isPlayingList = List.generate(songs.length, (_) => false);
+  Future<void> pauseAudio(String roomId) async {
+    try {
+      await audioPlayer.pause();
+      updatePlaybackState(roomId);
+    } catch (e) {
+      print("Error pausing audio: $e");
+    }
   }
+
+    Future<void> updatePlaybackState(String roomId) async {
+    final position = audioPlayer.position;
+    final isPlaying = audioPlayer.playing;
+    final playbackState =
+        PlaybackState(position: position, isPlaying: isPlaying);
+
+    await FirebaseFirestore.instance
+        .collection('rooms')
+        .doc(roomId)
+        .update(playbackState.toMap());
+  }
+
+  // void _initializeIsPlayingList() {
+  //   _isPlayingList = List.generate(songs.length, (_) => false);
+  // }
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('DuoStreaming'),
+        title: const Text('TunedHeartz'),
         titleTextStyle: const TextStyle(
             fontSize: 25,
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold),
         backgroundColor: const Color(0xFF141414),
       ),
-      body: ListView.builder(
-        itemCount: songs.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 0.0),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 30, // Increase the avatar size
-                backgroundImage: NetworkImage(songs[index]['imageUrl']),
-              ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    songs[index]['title'],
-                    style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white), // Increase title font size
-                  ),
-                  Text(
-                    songs[index]['singer'],
-                    style: const TextStyle(
-                        fontSize: 14, color: Colors.grey), // Singer name style
-                  ),
-                ],
-              ),
-              trailing: IconButton(
-                iconSize: 32,
-                color: Colors.white, // Increase icon size
-                icon: _isPlayingList[index]
-                    ? const Icon(Icons.pause)
-                    : const Icon(Icons.play_arrow),
-                onPressed: () {
-                  setState(() {
-                    _isPlayingList[index] = !_isPlayingList[index];
-                    // Add logic to play/pause the selected song based on _isPlayingList state
-                    if (_isPlayingList[index]) {
-                      // Logic to play the song at index
-                      // Pause other songs by setting their _isPlayingList value to false
-                      for (int i = 0; i < _isPlayingList.length; i++) {
-                        if (i != index) {
-                          _isPlayingList[i] = false;
-                        }
-                      }
-                    } else {
-                      // Logic to pause the song at index
-                    }
-                  });
-                },
-              ),
+      body:  StreamBuilder(
+                  stream: FireStore.userUploadsStream(),
+                  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(
+        child: CircularProgressIndicator(
+  value: 0.5, // Set the current progress value between 0.0 and 1.0
+  backgroundColor: Colors.grey, // Optionally, you can set a background color
+  valueColor: AlwaysStoppedAnimation<Color>(Colors.white), // Set the color of the progress indicator
+  strokeWidth: 4, // Set the thickness of the progress indicator
+),
+      );
+    } else if (snapshot.hasError) {
+      return Center(
+        child: Text('Error: ${snapshot.error}'),
+      );
+    }
+    else if (snapshot.data == null) {
+      // Handle the case where snapshot data is null
+      return const Text('No data available');
+    } else {
+      List<dynamic> uploads = snapshot.data!;
+      return  Stack(
+            children: [
+      ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: uploads.length,
+        itemBuilder: (context, index) {
+          var upload = uploads[index];
+          String filename = extractFilenameFromUrl(upload.toString());
+          return ListTile(
+            contentPadding: const EdgeInsets.fromLTRB(16.0, 15.0, 8.0, 0.0),
+            leading: const CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage('imageUrl'),
+            ),
+            title: Text(filename, style: const TextStyle(fontSize: 14, color: Colors.white)),
+            onTap: () {
+    // Store the link in the backend Firestore collection under rooms with the current song field name
+    FirebaseFirestore.instance.collection('rooms').doc(widget.roomCode).update({
+      'currentSong': upload.toString(),
+    }).then((value) {
+      // // Navigate to the music player page and pass the room code as a parameter
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MusicPlayer(roomCode: widget.roomCode,filename: filename,)),
+      );
+      // updateCurrentSong(upload.toString());
+        // Toggle playback (optional, implement your logic here)togglePlayback();
+    }).catchError((error) {
+      print("Failed to update current song: $error");
+      // Handle error if needed
+    });
+  },
+            trailing: IconButton(
+              icon: const Icon(Icons.more_vert, color: Colors.white),
+              onPressed: () {
+                // Handle song options (play, edit, delete)
+              },
             ),
           );
         },
       ),
+//         Positioned(
+//                 bottom: 0.0, // Positioned at the bottom
+//                 left: 0.0, // Left aligned
+//                 right: 0.0, // Right aligned
+//                 height: 72.0, // Fixed height
+//                 child: Container(
+//                   color: Colors.black.withOpacity(0.8), // Semi-transparent background
+//                   child: currentSongUrl != null
+//                       ? Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           children: [
+//                             // Song title and artist (replace with actual data retrieval)
+//                             Text(
+//                               "Currently Playing: ${extractFilenameFromUrl(currentSongUrl!)}",
+//                               style: const TextStyle(color: Colors.white, fontSize: 16.0),
+//                             ),
+//                             // Play/pause button
+//                             IconButton(
+//                               icon: Icon(
+//                                 isPlaying ? Icons.pause : Icons.play_arrow,
+//                                 color: Colors.white,
+//                               ),
+//                               onPressed: (){
+//  setState(() {
+//                 isPlaying = !isPlaying;
+//               });
+//               if (isPlaying) {
+//                 playAudioFromFirestore(widget.roomCode);
+//               } else {
+//                 pauseAudio(widget.roomCode);
+//               }
+//                               }
+//                             ),
+//                           ],
+//                         )
+//                       : const SizedBox(), // Empty container when no song is playing
+//                 ),
+//               ),
+            ],
+    );
+
+    }
+  },
+),
+  
+
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         selectedItemColor: Colors.red,
@@ -149,7 +245,7 @@ class _HomePageState extends State<HomePage> {
             // You can replace the Navigator logic with your specific routing method
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
+              MaterialPageRoute(builder: (context) => const HomePage(roomCode:'roomCode',)),
             );
           } else if (index == 1) {
             // Logic to navigate to Room Page
@@ -157,7 +253,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CurrentTeamPage(
+                  builder: (context) => const CurrentTeamPage(
                         roomCode: '',
                       )),
             );
@@ -176,6 +272,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
 }
 
 

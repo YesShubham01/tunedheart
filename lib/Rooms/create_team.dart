@@ -88,7 +88,7 @@ class _CreateTeamPageState extends State<CreateTeamPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MusicPlayer(
+                                builder: (context) => HomePage(
                                       roomCode: widget.roomCode,
                                     )),
                           );
