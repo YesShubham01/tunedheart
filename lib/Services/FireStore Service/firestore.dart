@@ -122,89 +122,41 @@ class FireStore {
     }
   }
 
-
 // for displaying uploads on profile page
-static Stream<List<dynamic>> userUploadsStream() async* {
-  try {
-    // Get the current user's ID
-    String userId = Authenticate.getUserUid();
+  static Stream<List<dynamic>> userUploadsStream() async* {
+    try {
+      // Get the current user's ID
+      String userId = Authenticate.getUserUid();
 
-    // Create a reference to the user's document in the "users" collection
-    DocumentReference userRef =
-        FirebaseFirestore.instance.collection("Users").doc(userId);
+      // Create a reference to the user's document in the "users" collection
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection("Users").doc(userId);
 
-    // Create a snapshot stream of the user's document
-    Stream<DocumentSnapshot> snapshotStream = userRef.snapshots();
+      // Create a snapshot stream of the user's document
+      Stream<DocumentSnapshot> snapshotStream = userRef.snapshots();
 
-    // Yield the mapped stream
-    yield* snapshotStream.map((doc) {
-      if (doc.exists) {
-        final userData = doc.data() as Map<String, dynamic>;
-        if (userData.containsKey('uploads')) {
-          // Accessing 'uploads' array from user data
-          final uploads = userData['uploads'] as List<dynamic>;
-          // Convert 'uploads' to List<List<String>>
-          return uploads;
-        } else {
-          // 'uploads' field doesn't exist or is null
-          return [];
-        }
-      } else {
-        // Document does not exist
-        throw Exception("User document does not exist");
-      }
-    });
-  } catch (e) {
-    // Handle errors
-    print("Error fetching user uploads: $e");
-    throw Exception("Failed to fetch user uploads");
-  }
-}
-
-static Stream<String?> userFirstUploadStream() async* {
-  try {
-    // Get the current user's ID
-    String userId = Authenticate.getUserUid();
-
-    // Create a reference to the user's document in the "users" collection
-    DocumentReference userRef =
-        FirebaseFirestore.instance.collection("Users").doc(userId);
-
-    // Create a snapshot stream of the user's document
-    Stream<DocumentSnapshot> snapshotStream = userRef.snapshots();
-
-    // Yield the mapped stream
-    yield* snapshotStream.map((doc) {
-      if (doc.exists) {
-        final userData = doc.data() as Map<String, dynamic>;
-        if (userData.containsKey('uploads')) {
-          // Accessing 'uploads' array from user data
-          final uploads = userData['uploads'] as List<dynamic>;
-          if (uploads.isNotEmpty) {
-            // Returning the first song from the array
-            return uploads[0];
+      // Yield the mapped stream
+      yield* snapshotStream.map((doc) {
+        if (doc.exists) {
+          final userData = doc.data() as Map<String, dynamic>;
+          if (userData.containsKey('uploads')) {
+            // Accessing 'uploads' array from user data
+            final uploads = userData['uploads'] as List<dynamic>;
+            // Convert 'uploads' to List<List<String>>
+            return uploads;
           } else {
-            // If uploads array is empty
-            return null; // or return some default value indicating no uploads
+            // 'uploads' field doesn't exist or is null
+            return [];
           }
         } else {
-          // 'uploads' field doesn't exist or is null
-          return null; // or return some default value indicating no uploads
+          // Document does not exist
+          throw Exception("User document does not exist");
         }
-      } else {
-        // Document does not exist
-        throw Exception("User document does not exist");
-      }
-    });
-  } catch (e) {
-    // Handle errors
-    print("Error fetching user uploads: $e");
-    throw Exception("Failed to fetch user uploads");
+      });
+    } catch (e) {
+      // Handle errors
+      print("Error fetching user uploads: $e");
+      throw Exception("Failed to fetch user uploads");
+    }
   }
-}
-
-
-
-
-
 }

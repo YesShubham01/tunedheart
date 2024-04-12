@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tunedheart/Pages/Home/mainpage.dart';
 import 'package:tunedheart/Pages/MusicPlayer/music_player.dart';
 import 'package:tunedheart/Pages/Rooms/homePage.dart';
+import 'package:tunedheart/Services/FireAuth%20Service/authentication.dart';
 import '../../Widget/custom_button.dart';
 import 'current_team.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,7 +47,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
       // Room exists, add the current user to the room's members
       await rooms.doc(roomCode).update({
         'members': FieldValue.arrayUnion(
-            ['Pranjal']), // Replace with the actual user ID
+            [Authenticate.getUserName()]), // Replace with the actual user ID
       });
 
       // Navigate to the CurrentTeamPage
