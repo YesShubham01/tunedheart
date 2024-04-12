@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tunedheart/Services/FireStore%20Service/firestore.dart';
-import '../Widget/custom_border.dart';
+import '../../Widget/custom_border.dart';
 
 class CurrentTeamPage extends StatefulWidget {
   final String roomCode;

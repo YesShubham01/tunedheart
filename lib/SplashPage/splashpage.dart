@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tunedheart/Login/login_page.dart';
-import 'package:tunedheart/Rooms/room_page.dart';
+import 'package:tunedheart/Pages/Rooms/room_page.dart';
 import 'package:tunedheart/Services/FireAuth%20Service/authentication.dart';
 
 class SplashPage extends StatefulWidget {
@@ -18,7 +18,6 @@ class _SplashPageState extends State<SplashPage> {
         MaterialPageRoute(builder: (context) => const RoomPage()),
       );
     } else {
-    
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -39,8 +38,8 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-      return const Scaffold(
- body: Center(
+    return const Scaffold(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

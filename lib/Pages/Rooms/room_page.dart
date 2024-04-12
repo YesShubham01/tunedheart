@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tunedheart/Pages/Profile/profile_page.dart';
 import 'package:tunedheart/Services/FireAuth%20Service/authentication.dart';
 import 'package:tunedheart/Widget/sqaure_button.dart';
-import '../Widget/custom_button.dart';
+import '../../Widget/custom_button.dart';
 import 'create_team.dart';
 import 'join_team.dart';
 import 'dart:math';

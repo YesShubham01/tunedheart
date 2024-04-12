@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tunedheart/Pages/MusicPlayer/music_player.dart';
 import 'package:tunedheart/Services/FireStore%20Service/firestore.dart';
-import '../Widget/custom_border.dart';
-import '../Widget/custom_button.dart';
+import '../../Widget/custom_border.dart';
+import '../../Widget/custom_button.dart';
 import 'homePage.dart';
 
 class CreateTeamPage extends StatefulWidget {

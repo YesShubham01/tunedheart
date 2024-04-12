@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tunedheart/Login/bottom_rectangles.dart';
-import 'package:tunedheart/Rooms/room_page.dart';
+import 'package:tunedheart/Pages/Rooms/room_page.dart';
 import 'package:tunedheart/Services/FireStore%20Service/firestore.dart';
 import 'package:tunedheart/Widget/google_sign_in_widget.dart';
 
