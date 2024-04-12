@@ -17,13 +17,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
- 
+
 // String roomId=widget.roomCode;
   int _currentIndex = 0;
   late List<bool> _isPlayingList;
   String? currentSongUrl;
   bool isPlaying=false;
- 
+
 
 
   String extractFilenameFromUrl(String url) {
@@ -46,22 +46,14 @@ String filename=parts.last;
     });
   }
 
-  // void togglePlayback() {
-  //     setState(() {
-  //               isPlaying = !isPlaying;
-  //             });
-  //             if (isPlaying) {
-  //               .playAudioFromFirestore(widget.roomCode);
-  //             } else {
-  //               pauseAudio(roomId);
-  //             }
-  //   // Implement logic to play/pause music based on isPlaying
-  // }
+
 
 
   @override
   void initState() {
     super.initState();
+  
+  
     // _initializeIsPlayingList(); // Initialize _isPlayingList in initState
   }
 final AudioPlayer audioPlayer = AudioPlayer();
@@ -164,11 +156,11 @@ final AudioPlayer audioPlayer = AudioPlayer();
       'currentSong': upload.toString(),
     }).then((value) {
       // // Navigate to the music player page and pass the room code as a parameter
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MusicPlayer(roomCode: widget.roomCode,filename: filename,)),
-      );
-      // updateCurrentSong(upload.toString());
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => MusicPlayer(roomCode: widget.roomCode,filename: filename,)),
+      // );
+      updateCurrentSong(upload.toString());
         // Toggle playback (optional, implement your logic here)togglePlayback();
     }).catchError((error) {
       print("Failed to update current song: $error");
@@ -222,12 +214,18 @@ final AudioPlayer audioPlayer = AudioPlayer();
 //                       : const SizedBox(), // Empty container when no song is playing
 //                 ),
 //               ),
+
+
             ],
     );
 
     }
   },
 ),
+persistentFooterButtons: [
+    // Pass the currentSongUrl
+    _buildSpotifyPlayer(),
+  ],
   
 
       bottomNavigationBar: BottomNavigationBar(
@@ -269,12 +267,82 @@ final AudioPlayer audioPlayer = AudioPlayer();
             label: 'Room',
           ),
         ],
+        
       ),
     );
   }
 
+  // Inside your HomePage class
+Widget _buildSpotifyPlayer() {
+  return BottomAppBar(
+    color: Colors.black,
+    elevation: 0,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MusicPlayer(
+              roomCode: widget.roomCode,
+              filename: currentSongUrl != null ? extractFilenameFromUrl(currentSongUrl!) : "No Song Selected", // Handle null case for filename
+            ),
+          ),
+        ),
+        child: currentSongUrl != null
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.music_note,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        currentSongUrl != null ? extractFilenameFromUrl(currentSongUrl!) : "No Song Selected", // Handle null case for filename display
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      isPlaying ? Icons.pause : Icons.play_arrow, // Use updated state for play/pause icon
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPlaying = !isPlaying;
+                      });
+                      if (isPlaying) {
+                        playAudioFromFirestore(widget.roomCode);
+                      } else {
+                        pauseAudio(widget.roomCode);
+                      }
+                    },
+                  ),
+                ],
+              )
+            : Container(
+                child: const Text("No song selected"),
+              ),
+      ),
+    ),
+  );
+}
+
+
+
 
 }
+
+
 
 
 // Placeholder RoomPage widget
