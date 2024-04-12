@@ -9,7 +9,7 @@ import 'current_team.dart';
 
 class HomePage extends StatefulWidget {
   final String roomCode;
-  const HomePage({Key? key,required this.roomCode}) : super(key: key);
+  const HomePage({Key? key, required this.roomCode}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,35 +17,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-
 // String roomId=widget.roomCode;
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
   late List<bool> _isPlayingList;
   String? currentSongUrl;
   bool isPlaying=false;
 
-
-
   String extractFilenameFromUrl(String url) {
-  String path = Uri.parse(url).pathSegments.last;
-  // Remove the file extension
-List<String> parts=path.split('/');
-String filename=parts.last;
-  // Remove file extension
-  filename = filename.replaceAll('.mp3', '');
-  // Replace %20 with spaces
-  filename = filename.replaceAll('%20', ' ');
-  return filename;
-}
-
-
+    String path = Uri.parse(url).pathSegments.last;
+    // Remove the file extension
+    List<String> parts = path.split('/');
+    String filename = parts.last;
+    // Remove file extension
+    filename = filename.replaceAll('.mp3', '');
+    // Replace %20 with spaces
+    filename = filename.replaceAll('%20', ' ');
+    return filename;
+  }
 
   void updateCurrentSong(String url) {
     setState(() {
       currentSongUrl = url;
     });
   }
-
 
 
 
@@ -56,8 +50,9 @@ String filename=parts.last;
   
     // _initializeIsPlayingList(); // Initialize _isPlayingList in initState
   }
-final AudioPlayer audioPlayer = AudioPlayer();
-    Future<void> playAudioFromFirestore(String roomId) async {
+
+  final AudioPlayer audioPlayer = AudioPlayer();
+  Future<void> playAudioFromFirestore(String roomId) async {
     AudioDetails audioDetails = await fetchAudioDetailsFromFirestore(roomId);
     final audioUrl = audioDetails.audioUrl;
     final currentPosition = audioDetails.currentPosition;
@@ -82,7 +77,7 @@ final AudioPlayer audioPlayer = AudioPlayer();
     }
   }
 
-    Future<void> updatePlaybackState(String roomId) async {
+  Future<void> updatePlaybackState(String roomId) async {
     final position = audioPlayer.position;
     final isPlaying = audioPlayer.playing;
     final playbackState =
@@ -100,8 +95,6 @@ final AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -112,6 +105,7 @@ final AudioPlayer audioPlayer = AudioPlayer();
             fontWeight: FontWeight.bold),
         backgroundColor: const Color(0xFF141414),
       ),
+
       body:  StreamBuilder(
                   stream: FireStore.userUploadsStream(),
                   builder: (context, snapshot) {
@@ -176,6 +170,8 @@ final AudioPlayer audioPlayer = AudioPlayer();
           );
         },
       ),
+
+            
 //         Positioned(
 //                 bottom: 0.0, // Positioned at the bottom
 //                 left: 0.0, // Left aligned

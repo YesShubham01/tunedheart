@@ -109,16 +109,16 @@ class _RoomPageState extends State<RoomPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SqaureButton(
-                      text: "Create Team",
+                      text: "Create Heart",
                       onPressed: () {
                         createRoom();
                       },
                       icon: const Image(
                           image: AssetImage("images/create_heart_icon.png")),
                       color: Colors.red),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 30),
                   SqaureButton(
-                      text: "Join Team",
+                      text: "Join Heart",
                       onPressed: () {
                         Navigator.push(
                           context,
