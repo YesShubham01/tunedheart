@@ -161,6 +161,49 @@ static Stream<List<dynamic>> userUploadsStream() async* {
   }
 }
 
+static Stream<String?> userFirstUploadStream() async* {
+  try {
+    // Get the current user's ID
+    String userId = Authenticate.getUserUid();
+
+    // Create a reference to the user's document in the "users" collection
+    DocumentReference userRef =
+        FirebaseFirestore.instance.collection("Users").doc(userId);
+
+    // Create a snapshot stream of the user's document
+    Stream<DocumentSnapshot> snapshotStream = userRef.snapshots();
+
+    // Yield the mapped stream
+    yield* snapshotStream.map((doc) {
+      if (doc.exists) {
+        final userData = doc.data() as Map<String, dynamic>;
+        if (userData.containsKey('uploads')) {
+          // Accessing 'uploads' array from user data
+          final uploads = userData['uploads'] as List<dynamic>;
+          if (uploads.isNotEmpty) {
+            // Returning the first song from the array
+            return uploads[0];
+          } else {
+            // If uploads array is empty
+            return null; // or return some default value indicating no uploads
+          }
+        } else {
+          // 'uploads' field doesn't exist or is null
+          return null; // or return some default value indicating no uploads
+        }
+      } else {
+        // Document does not exist
+        throw Exception("User document does not exist");
+      }
+    });
+  } catch (e) {
+    // Handle errors
+    print("Error fetching user uploads: $e");
+    throw Exception("Failed to fetch user uploads");
+  }
+}
+
+
 
 
 
