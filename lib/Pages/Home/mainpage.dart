@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tunedheart/Pages/Home/Chat/chat_screen.dart';
 import 'package:tunedheart/Pages/Home/Header/members_in_room.dart';
+import 'package:tunedheart/Pages/Home/Player/music_player.dart';
 import 'package:tunedheart/Pages/MusicPlayer/music_player.dart';
 import 'package:tunedheart/Providers/music_provider.dart';
 
@@ -38,7 +39,31 @@ class _MainPageState extends State<MainPage> {
                 _roomNameTitle(),
                 const MembersPresent(),
                 const ChatScreen(),
-                _buildMusicPlayerBottom(height, width),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return const MusicPlayerScreen();
+                        },
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(0, 1), // start position
+                              end: Offset.zero, // end position
+                            ).animate(animation),
+                            child: child,
+                          );
+                        },
+                        transitionDuration: const Duration(
+                            milliseconds: 400), // adjust the duration as needed
+                      ),
+                    );
+                  },
+                  child: _buildMusicPlayerBottom(height, width),
+                )
               ],
             ),
           ),
