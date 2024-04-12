@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tunedheart/Pages/Home/Chat/chat_screen.dart';
 import 'package:tunedheart/Pages/Home/Header/members_in_room.dart';
+import 'package:tunedheart/Pages/MusicPlayer/music_player.dart';
+import 'package:tunedheart/Providers/music_provider.dart';
 
 class MainPage extends StatefulWidget {
   String roomCode;
@@ -12,12 +15,19 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   @override
+  void initState() {
+    super.initState();
+
+    context.read<MusicProvider>().setActiveRoomCode(widget.roomCode);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.black,
         body: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: Align(
