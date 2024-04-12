@@ -18,11 +18,14 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Container(
         width: width * 0.8,
         height: height * 0.8,
-        color: Colors.orange,
+        decoration: BoxDecoration(
+          color: Colors.orange,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         child: const Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text("data")],
+          children: [Text("chat screen")],
         ),
       ),
     );

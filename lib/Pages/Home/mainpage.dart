@@ -18,15 +18,19 @@ class _MainPageState extends State<MainPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.blue,
-        body: Align(
-          alignment: Alignment.topCenter,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _roomNameTitle(),
-              const MembersPresent(),
-              const ChatScreen(),
-            ],
+        body: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _roomNameTitle(),
+                const MembersPresent(),
+                const ChatScreen(),
+                _buildMusicPlayerBottom(height, width),
+              ],
+            ),
           ),
         ),
       ),
@@ -37,6 +41,19 @@ class _MainPageState extends State<MainPage> {
     return const Text(
       "My Heart",
       style: TextStyle(fontSize: 24, color: Colors.white),
+    );
+  }
+
+  _buildMusicPlayerBottom(double h, double w) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.pink,
+        // borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      height: h * 0.1,
+      // width: w * 0.8,
     );
   }
 }

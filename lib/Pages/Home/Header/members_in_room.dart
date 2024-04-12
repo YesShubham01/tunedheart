@@ -16,7 +16,11 @@ class _MembersPresentState extends State<MembersPresent> {
     return Container(
       height: height * 0.05,
       width: width * 0.8,
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: const Center(child: Text("members")),
     );
   }
 }
