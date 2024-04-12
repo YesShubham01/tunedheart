@@ -8,7 +8,6 @@ import 'package:tunedheart/SplashPage/splashpage.dart';
 import 'package:tunedheart/firebase_options.dart';
 import 'package:provider/provider.dart';
 
-
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const HomePage(roomCode: '7000',),
+        home: const SplashPage(),
       ),
     );
   }
