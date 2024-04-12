@@ -20,12 +20,184 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-    final AudioPlayer audioPlayer = AudioPlayer();
-      bool isPlaying = false;
+  final AudioPlayer audioPlayer = AudioPlayer();
+  bool isPlaying = false;
   bool isLiked = false;
-      late String hostUser;
-      
-    Future<void> fetchHostUser() async {
+  late String hostUser;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchHostUser();
+    context.read<MusicProvider>().setActiveRoomCode(widget.roomCode);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _roomNameTitle(),
+                const MembersPresent(),
+                const ChatScreen(),
+                _getPlayerButtons(height),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _roomNameTitle() {
+    return const Text(
+      "My Heart",
+      style: TextStyle(fontSize: 24, color: Colors.white),
+    );
+  }
+
+  // _buildMusicPlayerBottom(double h, double w) {
+  //   return Container(
+
+  //     // width: w * 0.8,
+  //   );
+  // }
+
+  _getPlayerButtons(double h) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return const MusicPlayerScreen();
+            },
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1), // start position
+                  end: Offset.zero, // end position
+                ).animate(animation),
+                child: child,
+              );
+            },
+            transitionDuration: const Duration(
+                milliseconds: 400), // adjust the duration as needed
+          ),
+        );
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(67, 67, 67, 1),
+          // borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        height: h * 0.1,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {
+                // Shuffle button onPressed functionality
+              },
+              icon: const Icon(
+                Icons.shuffle,
+                color: Colors.white, // Change color to white
+                size: 30,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                // Previous button onPressed functionality
+              },
+              icon: const Icon(
+                Icons.skip_previous,
+                color: Colors.white, // Change color to white
+                size: 30,
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blue,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  // Play/pause button onPressed functionality
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                  if (isPlaying) {
+                    playAudioFromFirestore(widget.roomCode);
+                  } else {
+                    pauseAudio(widget.roomCode);
+                  }
+                },
+                icon: Icon(
+                  isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                // Next button onPressed functionality
+              },
+              icon: const Icon(
+                Icons.skip_next,
+                color: Colors.white, // Change color to white
+                size: 30,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                // Like button onPressed functionality
+                setState(() {
+                  isLiked = !isLiked;
+                });
+              },
+              icon: Icon(
+                Icons.favorite,
+                color: isLiked ? Colors.grey : Colors.red,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _getTitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Hello',
+          style: TextStyle(
+              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          "Host: $hostUser",
+          style: const TextStyle(color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  Future<void> fetchHostUser() async {
     try {
       DocumentSnapshot roomSnapshot = await FirebaseFirestore.instance
           .collection('rooms')
@@ -42,13 +214,7 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchHostUser(); 
-  }
-
-    Future<void> playAudioFromFirestore(String roomId) async {
+  Future<void> playAudioFromFirestore(String roomId) async {
     AudioDetails audioDetails = await fetchAudioDetailsFromFirestore(roomId);
     final audioUrl = audioDetails.audioUrl;
     final currentPosition = audioDetails.currentPosition;
@@ -83,252 +249,5 @@ class _MainPageState extends State<MainPage> {
         .collection('rooms')
         .doc(roomId)
         .update(playbackState.toMap());
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    context.read<MusicProvider>().setActiveRoomCode(widget.roomCode);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _roomNameTitle(),
-                const MembersPresent(),
-                const ChatScreen(),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return const MusicPlayerScreen();
-                        },
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0, 1), // start position
-                              end: Offset.zero, // end position
-                            ).animate(animation),
-                            child: child,
-                          );
-                        },
-                        transitionDuration: const Duration(
-                            milliseconds: 400), // adjust the duration as needed
-                      ),
-                    );
-                  },
-                  child: _getPlayerButtons(),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  _roomNameTitle() {
-    return const Text(
-      "My Heart",
-      style: TextStyle(fontSize: 24, color: Colors.white),
-    );
-  }
-
-  // _buildMusicPlayerBottom(double h, double w) {
-  //   return Container(
-    
-  //     // width: w * 0.8,
-  //   );
-  // }
-
-  _getPlayerButtons() {
-    // return Row(
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: [
-    //     IconButton(
-    //       onPressed: () {
-    //         // Shuffle button onPressed functionality
-    //       },
-    //       icon: const Icon(
-    //         Icons.shuffle,
-    //         color: Colors.white, // Change color to white
-    //         size: 30,
-    //       ),
-    //     ),
-    //     IconButton(
-    //       onPressed: () {
-    //         // Previous button onPressed functionality
-    //       },
-    //       icon: const Icon(
-    //         Icons.skip_previous,
-    //         color: Colors.white, // Change color to white
-    //         size: 30,
-    //       ),
-    //     ),
-    //     Container(
-    //       decoration: const BoxDecoration(
-    //         shape: BoxShape.circle,
-    //         color: Colors.blue,
-    //       ),
-    //       child: IconButton(
-    //         onPressed: () {
-    //           // Play/pause button onPressed functionality
-    //           setState(() {
-    //             isPlaying = !isPlaying;
-    //           });
-    //           if (isPlaying) {
-    //             playAudioFromFirestore(widget.roomCode);
-    //           } else {
-    //             pauseAudio(widget.roomCode);
-    //           }
-    //         },
-    //         icon: Icon(
-    //           isPlaying ? Icons.pause : Icons.play_arrow,
-    //           color: Colors.white,
-    //           size: 40,
-    //         ),
-    //       ),
-    //     ),
-    //     IconButton(
-    //       onPressed: () {
-    //         // Next button onPressed functionality
-    //       },
-    //       icon: const Icon(
-    //         Icons.skip_next,
-    //         color: Colors.white, // Change color to white
-    //         size: 30,
-    //       ),
-    //     ),
-    //     IconButton(
-    //       onPressed: () {
-    //         // Like button onPressed functionality
-    //         setState(() {
-    //           isLiked = !isLiked;
-    //         });
-    //       },
-    //       icon: Icon(
-    //         Icons.favorite,
-    //         color: isLiked ? Colors.grey : Colors.red,
-    //         size: 30,
-    //       ),
-    //     ),
-    //   ],
-    // );
-    return Container(
-      decoration: const BoxDecoration(
-
-        color: Colors.pink,
-        // borderRadius: BorderRadius.circular(20.0),
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-      ),
-      height: 50.0,
-      // width: w * 0.8,
-      child:Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          onPressed: () {
-            // Shuffle button onPressed functionality
-          },
-          icon: const Icon(
-            Icons.shuffle,
-            color: Colors.white, // Change color to white
-            size: 30,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            // Previous button onPressed functionality
-          },
-          icon: const Icon(
-            Icons.skip_previous,
-            color: Colors.white, // Change color to white
-            size: 30,
-          ),
-        ),
-        Container(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.blue,
-          ),
-          child: IconButton(
-            onPressed: () {
-              // Play/pause button onPressed functionality
-              setState(() {
-                isPlaying = !isPlaying;
-              });
-              if (isPlaying) {
-                playAudioFromFirestore(widget.roomCode);
-              } else {
-                pauseAudio(widget.roomCode);
-              }
-            },
-            icon: Icon(
-              isPlaying ? Icons.pause : Icons.play_arrow,
-              color: Colors.white,
-              size: 40,
-            ),
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            // Next button onPressed functionality
-          },
-          icon: const Icon(
-            Icons.skip_next,
-            color: Colors.white, // Change color to white
-            size: 30,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            // Like button onPressed functionality
-            setState(() {
-              isLiked = !isLiked;
-            });
-          },
-          icon: Icon(
-            Icons.favorite,
-            color: isLiked ? Colors.grey : Colors.red,
-            size: 30,
-          ),
-        ),
-      ],
-    ),
-    );
-  }
-
-  _getTitle() {
-    return  Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-        'Hello',
-          style: TextStyle(
-              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        
-        Text(
-          "Host: $hostUser",
-          style: const TextStyle(color: Colors.white),
-        ),
-      ],
-    );
   }
 }

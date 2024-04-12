@@ -14,33 +14,44 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   bool isLiked = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 29, 29, 29),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
-        child: Stack(
-          children: [
-            _backgroundBubbleLottieAnimation(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+    return SafeArea(
+      child: GestureDetector(
+        onVerticalDragEnd: (details) {
+          // Check if the user swiped downwards
+          if (details.primaryVelocity! > 0) {
+            // Navigate back to the first page
+            Navigator.pop(context);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 29, 29, 29),
+          body: Padding(
+            padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
+            child: Stack(
               children: [
-                const SizedBox(
-                  height: 50,
+                _backgroundBubbleLottieAnimation(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    _getMusicPlayerThumbnail(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: _getTitle(),
+                      ),
+                    ),
+                    // _getSeekBar(),
+                    _getPlayerButtons(),
+                    const Expanded(child: QueueSection()),
+                  ],
                 ),
-                _getMusicPlayerThumbnail(),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: _getTitle(),
-                  ),
-                ),
-                // _getSeekBar(),
-                _getPlayerButtons(),
-                const Expanded(child: QueueSection()),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
