@@ -159,4 +159,28 @@ class FireStore {
       throw Exception("Failed to fetch user uploads");
     }
   }
+
+  // static Future<List<String>> fetchArraysFromRoom(String roomCode) async {
+  // try {
+  //   // Get a reference to the "ChatRoom" collection
+  //   CollectionReference roomRef =
+  //       FirebaseFirestore.instance.collection('ChatRoom');
+
+  //   // Get the document with the provided roomCode
+  //   DocumentSnapshot roomDoc = await roomRef.doc(roomCode).get();
+
+  //   // Check if the document exists
+  //   if (roomDoc.exists) {
+  //     // Retrieve the data from the document
+  //     Object data = roomDoc.data()!;
+
+  //     // Check if the document contains an array
+  //   } else {
+  //     print('Document with room code $roomCode does not exist');
+  //     return [];
+  //   }
+  // } catch (e) {
+  //   print('Error fetching arrays: $e');
+  //   return [];
+  // }
 }
