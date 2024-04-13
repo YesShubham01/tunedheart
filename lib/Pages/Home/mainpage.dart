@@ -40,20 +40,48 @@ class _MainPageState extends State<MainPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _roomNameTitle(),
-                const MembersPresent(),
-                const ChatScreen(), // Include ChatPage here
-                _getPlayerButtons(height),
-              ],
+      child: GestureDetector(
+        onVerticalDragEnd: (details) {
+          // Check if the user swiped upwards
+          if (details.primaryVelocity! < 0) {
+            // Navigate to the second page
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return const MusicPlayerScreen();
+                },
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0, 1), // start position
+                      end: Offset.zero, // end position
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+                transitionDuration: const Duration(
+                    milliseconds: 400), // adjust the duration as needed
+              ),
+            );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _roomNameTitle(),
+                  const MembersPresent(),
+                  const ChatScreen(), // Include ChatPage here
+                  _getPlayerButtons(height),
+                ],
+              ),
             ),
           ),
         ),
