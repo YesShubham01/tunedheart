@@ -77,6 +77,9 @@ class _MainPageState extends State<MainPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _roomNameTitle(),
+                  Center(
+                      child:
+                          SizedBox(width: width * 0.8, child: const Divider())),
                   const MembersPresent(),
                   const ChatScreen(), // Include ChatPage here
                   _getPlayerButtons(height),
@@ -110,7 +113,10 @@ class _MainPageState extends State<MainPage> {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
-              return  MusicPlayer(roomCode: widget.roomCode, filename: extractFilenameFromUrl(audioUrl!),);
+              return MusicPlayer(
+                roomCode: widget.roomCode,
+                filename: extractFilenameFromUrl(audioUrl!),
+              );
             },
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
