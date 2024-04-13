@@ -273,7 +273,7 @@ class _MainPageState extends State<MainPage> {
     try {
       await audioPlayer.setUrl(audioUrl!);
       await audioPlayer.seek(Duration(milliseconds: currentPosition));
-      await audioPlayer.play();
+      // await audioPlayer.play();
       updatePlaybackState(roomId);
     } catch (e) {
       print("Error playing audio: $e");

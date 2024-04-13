@@ -183,4 +183,52 @@ class FireStore {
   //   print('Error fetching arrays: $e');
   //   return [];
   // }
+
+  static Future<List<List<dynamic>>> getAllArraysInRoom(String roomId) async {
+    try {
+      // Get a reference to the "ChatRoom" collection
+      CollectionReference roomsRef =
+          FirebaseFirestore.instance.collection('ChatRoom');
+
+      // Get the document with the given roomId
+      DocumentSnapshot roomDoc = await roomsRef.doc(roomId).get();
+
+      // Check if the document exists
+      if (roomDoc.exists) {
+        // Extract all arrays from the document
+        Map<String, dynamic> data = roomDoc.data() as Map<String, dynamic>;
+        List<List<dynamic>> arrays =
+            data.values.whereType<List<dynamic>>().toList();
+
+        return arrays;
+      } else {
+        print('Document with ID $roomId does not exist.');
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching arrays: $e');
+      return [];
+    }
+  }
+
+// Add a new message to the ChatRoom document
+  static Future<void> addMessageToRoom(String roomId, String message) async {
+    try {
+      // Get a reference to the "ChatRoom" collection
+      CollectionReference roomsRef =
+          FirebaseFirestore.instance.collection('ChatRoom');
+
+      // Get the document reference for the room
+      DocumentReference roomDocRef = roomsRef.doc(roomId);
+
+      // Update the room document with the new message
+      await roomDocRef.update({
+        'messages': FieldValue.arrayUnion([message])
+      });
+
+      print('Message added successfully to room $roomId');
+    } catch (e) {
+      print('Error adding message to room: $e');
+    }
+  }
 }
