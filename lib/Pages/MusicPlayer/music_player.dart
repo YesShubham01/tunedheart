@@ -113,6 +113,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
     try {
       await audioPlayer.pause();
       updatePlaybackState(roomId);
+      
     } catch (e) {
       print("Error pausing audio: $e");
     }
@@ -299,6 +300,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
               setState(() {
                 isPlaying = !isPlaying;
               });
+
               if (isPlaying) {
                 playAudioFromFirestore(roomId);
               } else {

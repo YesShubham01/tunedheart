@@ -82,7 +82,7 @@ class _MainPageState extends State<MainPage> {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
-              return const MusicPlayerScreen();
+              return  MusicPlayer(roomCode: widget.roomCode, filename: extractFilenameFromUrl(audioUrl!),);
             },
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
