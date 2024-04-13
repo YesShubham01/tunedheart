@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   String? currentSongUrl;
   bool isPlaying = false;
 
-  String extractFilenameFromUrl(String url) {
+  static String extractFilenameFromUrl(String url) {
     String path = Uri.parse(url).pathSegments.last;
     // Remove the file extension
     List<String> parts = path.split('/');
