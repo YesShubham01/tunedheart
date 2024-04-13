@@ -14,7 +14,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
-  late List<List<dynamic>> _messageData;
+  late List<dynamic> _messageData;
   @override
   void initState() {
     super.initState();
@@ -36,8 +36,8 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            FutureBuilder<List<List<dynamic>>>(
-                future: FireStore.getAllArraysInRoom(
+            FutureBuilder<List<dynamic>>(
+                future: FireStore.getMessagesInRoom(
                     context.read<MusicProvider>().activeRoomCode!),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -49,12 +49,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       return Column(
                         children: _messageData.map((message) {
                           // Assuming message is a list with two elements: msg and timestamp
-                          String msg = message[0];
-                          String timestamp = message[1];
+                          String msg = message;
 
-                          return MessageContainer(
-                            msg: msg,
-                            timestamp: timestamp,
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: MessageContainer(
+                              msg: msg,
+                              timestamp: "5:10",
+                            ),
                           );
                         }).toList(),
                       );
@@ -62,10 +64,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                   return const Center(child: CircularProgressIndicator());
                 }),
-            const MessageContainer(
-              msg: "hello",
-              timestamp: "10:10",
-            ),
             const SizedBox(
               height: 50,
             ),
@@ -108,13 +106,9 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage(String room) {
     final message = _messageController.text.trim();
     if (message.isNotEmpty) {
-      // FireStore.addMessageToRoom(room, message);
-
+      FireStore.addMessageToRoom(room, message);
+      setState(() {});
       _messageController.clear();
     }
-  }
-
-  fetchMessages(String room) async {
-    _messageData = await FireStore.getAllArraysInRoom(room);
   }
 }

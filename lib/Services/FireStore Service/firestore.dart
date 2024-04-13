@@ -184,7 +184,7 @@ class FireStore {
   //   return [];
   // }
 
-  static Future<List<List<dynamic>>> getAllArraysInRoom(String roomId) async {
+  static Future<List<dynamic>> getMessagesInRoom(String roomId) async {
     try {
       // Get a reference to the "ChatRoom" collection
       CollectionReference roomsRef =
@@ -195,18 +195,17 @@ class FireStore {
 
       // Check if the document exists
       if (roomDoc.exists) {
-        // Extract all arrays from the document
+        // Extract the "messages" array from the document
         Map<String, dynamic> data = roomDoc.data() as Map<String, dynamic>;
-        List<List<dynamic>> arrays =
-            data.values.whereType<List<dynamic>>().toList();
+        List<dynamic> messages = data['messages'];
 
-        return arrays;
+        return messages;
       } else {
         print('Document with ID $roomId does not exist.');
         return [];
       }
     } catch (e) {
-      print('Error fetching arrays: $e');
+      print('Error fetching messages: $e');
       return [];
     }
   }
